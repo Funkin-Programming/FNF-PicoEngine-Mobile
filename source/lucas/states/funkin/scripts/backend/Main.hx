@@ -8,12 +8,15 @@ import flixel.graphics.FlxGraphic;
 import flixel.FlxGame;
 import flixel.FlxState;
 import haxe.io.Path;
+
 import openfl.Assets;
 import openfl.Lib;
 import openfl.display.Sprite;
 import openfl.events.Event;
 import openfl.display.StageScaleMode;
 import lime.app.Application;
+
+import backend.Highscore;
 import states.TitleState;
 
 #if HSCRIPT_ALLOWED
@@ -26,7 +29,7 @@ import lime.graphics.Image;
 #end
 
 #if desktop
-import backend.ALSoftConfig; // Just to make sure DCE doesn't remove this, since it's not directly referenced anywhere else.
+import backend.ALSoftConfig;
 #end
 
 //crash handler stuff
@@ -38,7 +41,7 @@ import haxe.io.Path;
 import backend.Highscore;
 
 // Pico Engine
-import lucas.states.funkin.scripts.backend.display.fps.FPSCounter;
+import lucas.states.funkin.scripts.backend.tools.DebugDisplay as FPSCounter;
 
 // NATIVE API STUFF, YOU CAN IGNORE THIS AND SCROLL //
 #if (linux && !debug)
@@ -46,7 +49,6 @@ import lucas.states.funkin.scripts.backend.display.fps.FPSCounter;
 @:cppFileCode('#define GAMEMODE_AUTO')
 #end
 
-// // // // // // // // //
 class Main extends Sprite
 {
 	public static final game = {
@@ -57,10 +59,7 @@ class Main extends Sprite
 		skipSplash: true, // if the default flixel splash screen should be skipped
 		startFullscreen: false // if the game should start at fullscreen mode
 	};
-
 	public static var fpsVar:FPSCounter;
-
-	// You can pretty much ignore everything from here on - your code should go in your states.
 
 	public static function main():Void
 	{
@@ -162,7 +161,7 @@ class Main extends Sprite
 		Lib.current.stage.align = "tl";
 		Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;
 		if(fpsVar != null) {
-			fpsVar.visible = ClientPrefs.data.showFPS;
+			fpsVar.visible = (ClientPrefs.data.fpsDisplay != 'Disabled');
 		}
 		#end
 
@@ -209,8 +208,6 @@ class Main extends Sprite
 		}
 	}
 
-	// Code was entirely made by sqirra-rng for their fnf engine named "Izzy Engine", big props to them!!!
-	// very cool person for real they don't get enough credit for their work
 	#if CRASH_HANDLER
 	function onCrash(e:UncaughtErrorEvent):Void
 	{
@@ -219,8 +216,8 @@ class Main extends Sprite
 		var callStack:Array<StackItem> = CallStack.exceptionStack(true);
 		var dateNow:String = Date.now().toString();
 
-		dateNow = dateNow.replace(" ", "_");
-		dateNow = dateNow.replace(":", "'");
+		dateNow = dateNow.replace("", "-");
+		dateNow = dateNow.replace(":", "()");
 
 		path = "./content/logs/" + "PicoEnginelogs-" + dateNow + ".json";
 
