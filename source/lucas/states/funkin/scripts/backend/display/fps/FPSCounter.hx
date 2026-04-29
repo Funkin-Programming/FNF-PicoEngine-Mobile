@@ -59,7 +59,7 @@ class FPSCounter extends TextField
 
 		currentFPS = times.length < FlxG.updateFramerate ? times.length : FlxG.updateFramerate;		
 		updateText();
-		text += '\nFunkin Pico v${MainMenuState.PicoVersion}';
+		text += '\nFNF: Pico Engine v${MainMenuState.PicoVersion}';
 		deltaTimeout = 0.0;
 	}
 
@@ -67,7 +67,7 @@ class FPSCounter extends TextField
 		text = 'FPS: ${currentFPS}'
 		+ '\nMemory: ${flixel.util.FlxStringUtil.formatBytes(memoryMegas)}';
 
-		textColor = 0xFF04FC25;
+		textColor = 0xFFFFFFFF;
 		if (currentFPS < FlxG.drawFramerate * 0.5)
 			textColor = 0xFFFF0000;
 	}

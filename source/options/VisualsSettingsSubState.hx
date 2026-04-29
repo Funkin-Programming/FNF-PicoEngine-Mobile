@@ -5,6 +5,9 @@ import objects.StrumNote;
 import objects.NoteSplash;
 import objects.Alphabet;
 
+// Pico Engine FPS Display - Reworked
+import lucas.states.funkin.scripts.backend.Main;
+
 class VisualsSettingsSubState extends BaseOptionsMenu
 {
 	var noteOptionID:Int = -1;
@@ -14,7 +17,7 @@ class VisualsSettingsSubState extends BaseOptionsMenu
 	public function new()
 	{
 		title = Language.getPhrase('visuals_menu', 'Visuals Settings');
-		rpcTitle = 'Visuals Settings Menu'; //for Discord Rich Presence
+		rpcTitle = 'Visuals Settings Menu';
 
 		// for note skins and splash skins
 		notes = new FlxTypedGroup<StrumNote>();
@@ -33,8 +36,7 @@ class VisualsSettingsSubState extends BaseOptionsMenu
 			splashes.add(splash);
 		}
 
-		// options
-		var noteSkins:Array<String> = Mods.mergeAllTextsNamed('images/noteSkins/list.txt');
+		var noteSkins:Array<String> = Mods.mergeAllTextsNamed('data/noteSkins-List.txt');
 		if(noteSkins.length > 0)
 		{
 			if(!noteSkins.contains(ClientPrefs.data.noteSkin))
@@ -51,7 +53,7 @@ class VisualsSettingsSubState extends BaseOptionsMenu
 			noteOptionID = optionsArray.length - 1;
 		}
 		
-		var noteSplashes:Array<String> = Mods.mergeAllTextsNamed('images/noteSplashes/list.txt');
+		var noteSplashes:Array<String> = Mods.mergeAllTextsNamed('data/noteSplashes-List.txt');
 		if(noteSplashes.length > 0)
 		{
 			if(!noteSplashes.contains(ClientPrefs.data.splashSkin))
@@ -120,6 +122,16 @@ class VisualsSettingsSubState extends BaseOptionsMenu
 		option.changeValue = 0.1;
 		option.decimals = 1;
 		addOption(option);
+		
+		#if !mobile
+		var option:Option = new Option('FPS Display:',
+			"Show some debug info on the top left corner of the screen.\nThis includes FPS, Memory usage, Chart info and more.\nNote: Chart info will only be shown if you have at least the FPS only option enabled.",
+			'fpsDisplay',
+			STRING,
+			['Disabled', 'FPS Only', 'FPS and Memory', 'Everything']);
+		addOption(option);
+		option.onChange = onChangeDebugDisplay;
+		#end
 		
 		var option:Option = new Option('Pause Music:',
 			"What song do you prefer for the Pause Screen?",
@@ -277,4 +289,13 @@ class VisualsSettingsSubState extends BaseOptionsMenu
 		Note.globalRgbShaders = [];
 		super.destroy();
 	}
+
+	#if !mobile
+	function onChangeDebugDisplay()
+	{
+		if(Main.fpsVar != null)
+			Main.fpsVar.visible = (ClientPrefs.data.fpsDisplay != 'Disabled');
+			Main.fpsVar.updateDebugType(ClientPrefs.data.fpsDisplay);
+	}
+	#end
 }

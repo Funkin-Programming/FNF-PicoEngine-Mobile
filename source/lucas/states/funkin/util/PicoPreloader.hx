@@ -103,7 +103,6 @@ class FunkinPreloader extends FlxBasePreloader
 	private var parsingSongsComplete:Bool = false;
 
 	private var initializingScriptsPercent:Float = -1;
-
 	private var cachingCoreAssetsPercent:Float = -1;
 
 	/**

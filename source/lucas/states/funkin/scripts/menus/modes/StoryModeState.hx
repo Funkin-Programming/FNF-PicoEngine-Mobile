@@ -1,17 +1,16 @@
-package lucas.states.funkin.scripts.modes;
+package lucas.states.funkin.scripts.menus.modes;
 
 import backend.WeekData;
 import backend.Highscore;
 import backend.Song;
 import backend.StageData;
 
-import flixel.group.FlxGroup;
-import flixel.graphics.FlxGraphic;
-
 import objects.MenuItem;
 import objects.MenuCharacter;
-
 import substates.ResetScoreSubState;
+
+import flixel.group.FlxGroup;
+import flixel.graphics.FlxGraphic;
 
 // Pico Engine and P-Slice
 import lucas.states.vslice.scripts.options.VsliceOptions;
@@ -376,6 +375,7 @@ class StoryModeState extends MusicBeatState
 			var newFrames = Paths.getSparrowAtlas('storymenu/difficulties/' + Paths.formatToSongPath(diff));
 			sprDifficulty.frames = newFrames;
 			sprDifficulty.animation.addByPrefix('idle', 'idle0', 24, true);
+
 			if (VsliceOptions.FLASHBANG)
 			sprDifficulty.animation.play('idle');
 			sprDifficulty.x = leftArrow.x + 60;
@@ -389,7 +389,6 @@ class StoryModeState extends MusicBeatState
 		else
 		{
 			var newImage:FlxGraphic = Paths.image('storymenu/difficulties/' + Paths.formatToSongPath(diff));
-			// trace(Mods.currentModDirectory + ', menudifficulties/' + Paths.formatToSongPath(diff));
 
 			if (sprDifficulty.graphic != newImage)
 			{
